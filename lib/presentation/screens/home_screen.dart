@@ -78,7 +78,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final presetsAsync = ref.watch(presetsProvider);
     final selectedPresetId = ref.watch(selectedPresetProvider);
     final analysisState = ref.watch(analysisProvider);
-    final history = ref.watch(historyProvider);
 
     return Scaffold(
       body: analysisState.isLoading
@@ -104,7 +103,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       margin: const EdgeInsets.only(top: 12),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.45),
+                        color: Colors.black.withValues(alpha: 0.45),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: presetsAsync.when(
@@ -126,7 +125,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   filled: true,
-                                  fillColor: Colors.black.withOpacity(0.35),
+                                  fillColor: Colors.black.withValues(
+                                    alpha: 0.35,
+                                  ),
                                   contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 10,
@@ -191,7 +192,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   : Colors.grey[300],
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.3),
+                                  color: Colors.black.withValues(alpha: 0.3),
                                   blurRadius: 8,
                                   spreadRadius: 2,
                                 ),
@@ -219,7 +220,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               height: 50,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.black.withOpacity(0.5),
+                                color: Colors.black.withValues(alpha: 0.5),
                                 border: Border.all(
                                   color: Colors.white70,
                                   width: 2,
@@ -285,47 +286,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return CameraPreview(_cameraController!);
   }
 
-  Widget _buildHistoryItem(
-    BuildContext context,
-    WidgetRef ref,
-    dynamic result,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => ResultScreen(result: result)),
-        );
-      },
-      child: Container(
-        width: 100,
-        margin: const EdgeInsets.only(right: 12),
-        child: Column(
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.file(
-                  File(result.imagePath),
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.broken_image),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${result.totalScore}점',
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Future<void> _captureAndAnalyze(BuildContext context) async {
     if (!_isCameraReady || _cameraController == null || _isCapturing) {
       return;
@@ -336,9 +296,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       final image = await _cameraController!.takePicture();
       if (!mounted) return;
       final imageFile = File(image.path);
+      // ignore: use_build_context_synchronously
       _analyzeImage(context, ref, imageFile);
     } catch (e) {
       if (!mounted) return;
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('촬영 실패: $e')));
@@ -354,6 +316,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final imageFile = await notifier.pickFromGallery();
 
     if (imageFile != null && context.mounted) {
+      // ignore: use_build_context_synchronously
       _analyzeImage(context, ref, imageFile);
     }
   }
