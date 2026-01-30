@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>패션 평가를 위해 사진을 촬영합니다.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>패션 평가를 위해 사진을 선택합니다.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>분석 결과를 저장하기 위해 사진에 접근합니다.</string>
 </dict>
 </plist>

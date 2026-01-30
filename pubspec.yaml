@@ -39,6 +39,7 @@ dependencies:
   
   # Image
   image_picker: ^1.1.2
+  camera: ^0.11.0+2
   
   # Local Storage
   hive: ^2.2.3
