@@ -6,7 +6,13 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 class ApiClient {
   late final GenerativeModel _model;
 
-  static const String apiKey = 'AIzaSyABLPPyAy0xQEMLnIzwzczgStDuYrutlsw';
+  static String get apiKey {
+    const key = String.fromEnvironment('GEMINI_API_KEY');
+    if (key.isEmpty) {
+      throw ApiException('GEMINI_API_KEY가 정의되지 않았습니다. --dart-define=GEMINI_API_KEY=YOUR_KEY로 실행해주세요.', 400);
+    }
+    return key;
+  }
 
   ApiClient() {
     _model = GenerativeModel(model: 'gemini-2.0-flash', apiKey: apiKey);
